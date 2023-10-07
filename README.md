@@ -1,9 +1,12 @@
 # TikTok Scripts
 
-- Scripts require `Node.js`
+## Environment Setup
+- Scripts require `Node.js` (Tested with `LTS v18.18.0`)
   - Install from [nodejs.org](https://nodejs.org/en/download)
   - OR Install with [Volta (A modern NVM alternative)](https://volta.sh/)
-
+- Install dependencies with `npm` or `yarn`
+  - `npm install`
+- Proceed to run scripts
 ---
 ## Download Private Accounts
 
