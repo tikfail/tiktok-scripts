@@ -11,9 +11,10 @@
 ## Download Private Accounts
 
 - Move `.env.example` to `.env`
-- Edit the `COOKIES` & `USERAGENT` values in `.env`
+- Edit the values in `.env`
   - `COOKIES`: The cookies from your account which follows the private user
   - `USERAGENT`: The 'User-Agent' of the browser thats logged into the account
+  - `THUMBNAILS`: Download the default and animated thumbnails for videos
 - Run `dump-account.js`
   - Usage: `node dump-account.js <username>`
   - Example: `node dump-account.js poki`

@@ -136,8 +136,11 @@ const dumpUserPosts = async (username, cursor = 0) => {
       console.log(error)
     }
 
-    // Video Thumbnail
-    // await download(v.video.cover, path.join(__dirname, `downloads/${v.author.uniqueId}/${vid}-thumb.jpg`))
+    // Video Thumbnails
+    if (process.env.THUMBNAILS) {
+      await downloadMedia(v.video.dynamicCover, `downloads/${v.author.uniqueId}/${vid}.webp`, COOKIES)
+      await downloadMedia(v.video.cover, `downloads/${v.author.uniqueId}/${vid}.jpg`, COOKIES)
+    }
   }
 
   if (data.hasMore) {
@@ -153,6 +156,6 @@ if (require.main === module) {
   if (process.argv[2]) {
     dumpUserPosts(process.argv[2])
   } else {
-    console.log(`[error] Usage: node ${process.argv[2]} <username>`)
+    console.log('[error] Usage: node dump-account.sh <username>')
   }
 }
