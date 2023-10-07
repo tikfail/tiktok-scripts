@@ -1,0 +1,21 @@
+{
+  "name": "tiktok-scripts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "tik",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.5.1",
+    "canvas": "^2.11.2",
+    "dotenv": "^16.3.1",
+    "httpreq": "^1.1.1",
+    "jsdom": "^22.1.0"
+  },
+  "volta": {
+    "node": "19.8.1"
+  }
+}
