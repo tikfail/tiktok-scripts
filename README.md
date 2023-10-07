@@ -15,7 +15,11 @@
   - `COOKIES`: The cookies from your account which follows the private user
   - `USERAGENT`: The 'User-Agent' of the browser thats logged into the account
   - `THUMBNAILS`: Download the default and animated thumbnails for videos
+    - Always set to `true` if submitting to Tik.fail
 - Run `dump-account.js`
   - Usage: `node dump-account.js <username>`
   - Example: `node dump-account.js poki`
-- Media (Videos & Images) and Metadata will be saved to `./downloads/username/` using the video ID
+- The following contents will be saved to `./downloads/username/` using the video ID as the filenames
+  - **Videos**: Unwatermarked video (+thumbnails if enabled)
+  - **Slideshows**: Unwatermarked images
+  - **All**: Metadata JSON
