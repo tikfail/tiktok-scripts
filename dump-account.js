@@ -38,8 +38,9 @@ const dumpUserPosts = async (username, cursor = 0) => {
       responseEncoding: 'utf8'
     }
     const userMetadata = await axios(userAxiosConfig)
-    secuid = userMetadata.data.data.sec_uid
-    console.log(userMetadata.data)
+    const meta = userMetadata.data[0]
+    secuid = meta.sec_uid
+    console.log(meta)
 
     if (!userMetadata.data.success || !secuid.startsWith('MS4wLjABAAAA')) {
       console.log('[error] Couldn\'t get user sec_uid')
