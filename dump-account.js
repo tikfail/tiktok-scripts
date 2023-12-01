@@ -37,13 +37,14 @@ const dumpUserPosts = async (username, cursor = 0) => {
       responseType: 'json',
       responseEncoding: 'utf8'
     }
-    const userMetadata = await axios(userAxiosConfig)
-    const meta = userMetadata.data[0]
+    const { data } = await axios(userAxiosConfig)
+    const meta = data.data[0]
     secuid = meta.sec_uid
     console.log(meta)
 
-    if (!userMetadata.data.success || !secuid.startsWith('MS4wLjABAAAA')) {
+    if (!data.success || !secuid.startsWith('MS4wLjABAAAA')) {
       console.log('[error] Couldn\'t get user sec_uid')
+      console.log(meta)
       process.exit(1)
     }
   }
