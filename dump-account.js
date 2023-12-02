@@ -4,7 +4,7 @@ const fs = require('fs')
 const path = require('path')
 const axios = require('axios')
 
-const Signer = require('./lib/signer')
+// const Signer = require('./lib/signer')
 
 const { downloadMedia, sleep } = require('./lib/utils')
 
@@ -23,8 +23,13 @@ const precheck = async (username) => {
 }
 
 const dumpUserPosts = async (username, cursor = 0) => {
-  const signer = new Signer(UA)
+  // const signer = new Signer(UA)
   let secuid = username
+
+  if (cursor === 0) {
+    cursor = new Date().getTime()
+    precheck(username)
+  }
 
   // eslint-disable-next-line no-negated-condition
   if (!username.startsWith('MS4wLjABAAAA')) {
@@ -49,52 +54,22 @@ const dumpUserPosts = async (username, cursor = 0) => {
     }
   }
 
-  const baseURL = 'https://www.tiktok.com/api/post/item_list/'
-  const params = {
-    WebIdLastTime: Math.floor(new Date().getTime() / 1000),
-    secUid: secuid,
-    cursor: cursor,
-    count: 35,
-    aid: 1988,
-    app_language: 'en',
-    app_name: 'tiktok_web',
-    browser_language: 'en-US',
-    browser_name: 'Mozilla',
-    browser_online: 'true',
-    browser_platform: 'Win32',
-    browser_version: UA,
-    channel: 'tiktok_web',
-    cookie_enabled: 'true',
-    device_id: '7240013366175843187',
-    device_platform: 'web_pc',
-    focus_state: 'true',
-    from_page: 'user',
-    history_len: 2,
-    is_fullscreen: 'false',
-    is_page_visible: 'true',
-    language: 'en',
-    os: 'windows',
-    priority_region: 'US',
-    referer: '',
-    region: 'US',
-    screen_height: 1080,
-    screen_width: 1920,
-    tz_name: 'America/Phoenix',
-    webcast_language: 'en'
-  }
-
-  const unsignedURL = baseURL + '?' + new URLSearchParams(params).toString()
-  const signedData = signer.sign(unsignedURL)
-
   const tiktokAxiosConfig = {
     method: 'GET',
-    url: signedData.signed_url,
+    url: 'https://www.tiktok.com/api/creator/item_list/',
     headers: {
       'Origin': 'https://www.tiktok.com',
-      'X-TT-Params': signedData['x-tt-params'],
       'User-Agent': UA,
       'Cookie': COOKIES
     },
+    params: {
+      aid: 1988,
+      count: 15,
+      cursor: cursor,
+      secUid: secuid,
+      type: 1,
+      verifyFp: 'verify_'
+    },  
     responseType: 'json',
     responseEncoding: 'utf8'
   }
@@ -103,13 +78,14 @@ const dumpUserPosts = async (username, cursor = 0) => {
 
   if (!data.itemList) {
     console.log(`[warn] Got hasMore but itemList is empty | ${cursor}`)
+    console.log(data)
     return process.exit(1)
   }
 
   const total = data.itemList.length
-  console.log(`[----] Got ${total} Total Items | hasMore: ${data.hasMore}`)
+  const nextCursor = Math.floor(Number(data.itemList.at(-1).createTime) * 1000)
 
-  if (cursor === 0) precheck(username)
+  console.log(`[----] Got ${total} Total Items | hasMore: ${data.hasMorePrevious}`)
 
   for (let i = 0; i < total; ++i) {
     const v = data.itemList[i]
@@ -145,9 +121,10 @@ const dumpUserPosts = async (username, cursor = 0) => {
     }
   }
 
-  if (data.hasMore) {
-    console.log(`=========================[ Cursor: ${cursor} --> ${data.cursor} | hasMore: ${data.hasMore} ]=========================`)
-    return dumpUserPosts(secuid, data.cursor)
+
+  if (data.hasMorePrevious) {
+    console.log(`=========================[ Cursor: ${cursor} --> ${nextCursor} | hasMore: ${data.hasMorePrevious} ]=========================`)
+    return dumpUserPosts(secuid, nextCursor)
   }
 
   console.log('[info] Done')
